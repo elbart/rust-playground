@@ -50,6 +50,7 @@ mod tests {
         let t3 = Rc::new(
             YakeTarget::new("foo".into())
                 .dependency(Rc::clone(&t1))
+                .dependency(Rc::clone(&t2))
                 .sub_target(Rc::clone(&t2)),
         );
 
