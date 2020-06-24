@@ -1,18 +1,18 @@
-use std::cell::RefCell;
+use std::rc::Rc;
 
 #[derive(Debug)]
 struct YakeTarget {
     pub name: String,
-    pub dependencies: Option<Vec<YakeTarget>>,
+    pub dependencies: Option<Vec<Rc<YakeTarget>>>,
 }
 
 #[derive(Debug)]
 struct Yake {
-    pub targets: Vec<YakeTarget>
+    pub targets: Vec<Rc<YakeTarget>>
 }
 
 impl Yake {
-    fn new(targets: Vec<YakeTarget>) -> Self {
+    fn new(targets: Vec<Rc<YakeTarget>>) -> Self {
         Yake {
             targets: targets
         }
@@ -25,15 +25,15 @@ mod tests {
 
     #[test]
     fn base_layout() {
-        let t1 = YakeTarget {
+        let t1 = Rc::new(YakeTarget {
             name: "psql".into(),
             dependencies: None
-        };
+        });
 
-        let t2 = YakeTarget {
+        let t2 = Rc::new(YakeTarget {
             name: "docker".into(),
-            dependencies: Some(vec![&t1])
-        };
+            dependencies: Some(vec![t1.clone()])
+        });
 
         let targets = vec![t1, t2];
         let y = Yake::new(targets);
